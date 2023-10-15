@@ -1,9 +1,8 @@
 package com.tandid.springrest.rest;
 
 import com.tandid.springrest.entity.Student;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.annotation.PostConstruct;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,15 +11,26 @@ import java.util.List;
 @RequestMapping("/api")
 public class StudentRestController {
 
-    @GetMapping("/students")
-    public List<Student> getStudents() {
+    private List<Student> theStudents;
 
-        List<Student> theStudents = new ArrayList<>();
+    // Define @PostConstruct to load the student data only once!
+    @PostConstruct
+    public void loadData() {
+        theStudents = new ArrayList<>();
 
         theStudents.add(new Student("John", "Doe"));
         theStudents.add(new Student("Jane", "Smith"));
         theStudents.add(new Student("Mary", "Poppins"));
+    }
 
+    @GetMapping("/students")
+    public List<Student> getStudents() {
         return theStudents;
+    }
+
+    @GetMapping("/students/{studentId}")
+    public Student getStudent(@PathVariable int studentId) {
+        return theStudents.get(studentId);
+
     }
 }
